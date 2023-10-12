@@ -174,6 +174,9 @@ public abstract class Vehicle extends SuperSmoothMover
      * if a faster vehicle is ahead in the lane.
      */
     public double getSpeed(){
-        return speed;
+        if(moving){
+            return speed;
+        }
+        return 0;
     }
 }
