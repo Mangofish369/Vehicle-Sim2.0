@@ -24,6 +24,7 @@ import java.util.LinkedList;
 public class VehicleWorld extends World
 {
     private GreenfootImage background;
+    private GreenfootImage crossingPlatform;
 
     // Color Constants
     public static Color GREY_BORDER = new Color (108, 108, 108);
@@ -75,6 +76,11 @@ public class VehicleWorld extends World
         background = new GreenfootImage ("grass-background.png");
         background.scale(1024, 800);
         setBackground (background);
+        
+        crossingPlatform = new GreenfootImage("crossing-road.png");
+        crossingPlatform.scale(150,200);
+        setBackground(crossingPlatform);
+        
 
         // Set critical variables - will affect lane drawing
         laneCount = 8;
@@ -93,6 +99,10 @@ public class VehicleWorld extends World
         laneSpawners[3].setSpeedModifier(1.4);
 
         setBackground (background);
+        
+        addObject(new CrossingPlatform(150,200),500,330);
+        addObject(new CrossingPlatform(150,200),500,500);
+        addObject(new CrossingPlatform(150,200),500,570);
     }
 
     public void act () {
