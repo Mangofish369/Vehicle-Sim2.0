@@ -7,6 +7,9 @@ public abstract class Citation
      * 
      * Image of Traffic Lights
      * https://www.istockphoto.com/vector/led-modern-street-traffic-lights-background-gm165818773-18626367
+     * 
+     * Image of white line
+     * https://www.citypng.com/photo/17303/horizontal-white-line
      */
     
     

@@ -1,7 +1,0 @@
-#BlueJ class context
-comment0.target=Sensor
-comment1.params=traffic
-comment1.target=Sensor(TrafficLights)
-comment2.params=
-comment2.target=void\ act()
-numComments=3

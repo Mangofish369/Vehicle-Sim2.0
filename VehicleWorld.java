@@ -50,6 +50,8 @@ public class VehicleWorld extends World
     SimpleTimer policeDelay = new SimpleTimer();
     Queue<Integer> speedingLane = new LinkedList<>();
     Pointer pointer = new Pointer();
+    StopLine leftToRight = new StopLine();
+    StopLine rightToLeft = new StopLine();
     
     /**
      * Constructor for objects of class MyWorld.
@@ -109,6 +111,9 @@ public class VehicleWorld extends World
         addObject(new TrafficLights(),350,700);
         
         addObject(pointer, -10,-10);
+        
+        addObject(leftToRight, 400,560);
+        addObject(rightToLeft, 600,340);
     }
 
     public void act () {
@@ -308,7 +313,7 @@ public class VehicleWorld extends World
         ArrayList<ActorContent> acList = new ArrayList<ActorContent>();
         // Create a list of ActorContent objects and populate it with all Actors sent to be sorted
         for (Actor a : actorsToSort){
-            if(!(a instanceof CrossingPlatform)){
+            if(!(a instanceof CrossingPlatform || a instanceof StopLine)){
                 acList.add (new ActorContent (a, a.getX(), a.getY()));
             }
         }    

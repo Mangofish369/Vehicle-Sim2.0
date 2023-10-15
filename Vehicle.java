@@ -1,5 +1,6 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This is the superclass for Vehicles.
@@ -16,6 +17,7 @@ public abstract class Vehicle extends SuperSmoothMover
     protected VehicleSpawner origin;
     protected int followingDistance;
     protected int myLaneNumber;
+ 
 
     protected abstract boolean checkHitPedestrian ();
 
@@ -63,7 +65,9 @@ public abstract class Vehicle extends SuperSmoothMover
      * - subclass' act() method can invoke super.act() to call this, as is demonstrated here.
      */
     public void act () {
+        
         drive(); 
+        
         if (!checkHitPedestrian()){
             repelPedestrians();
         }
@@ -151,6 +155,10 @@ public abstract class Vehicle extends SuperSmoothMover
         // we can call that on any vehicle to find out it's speed
         Vehicle ahead = (Vehicle) getOneObjectAtOffset (direction * (int)(speed + getImage().getWidth()/2 + 6), 0, Vehicle.class);
         double otherVehicleSpeed = -1;
+        checkTrafficLight();
+        if(!moving){
+            speed = 0;
+        }
         if (ahead != null) {
 
             otherVehicleSpeed = ahead.getSpeed();
@@ -167,7 +175,21 @@ public abstract class Vehicle extends SuperSmoothMover
         }
 
         move (speed * direction);
-    }   
+    }
+    
+    public void checkTrafficLight(){
+        if (isTouching(StopLine.class)){
+            if(!getObjectsInRange(500,TrafficLights.class).isEmpty()){
+                TrafficLights lights = (TrafficLights)getObjectsInRange(300,TrafficLights.class).get(0);
+                System.out.println("here");
+                if(lights.getColour().equals("red")){
+                    moving = false;
+                    
+                }
+            }
+        }
+        Pedestrian p = (Pedestrian)getOneObjectAtOffset((int)speed + getImage().getWidth()/2, 0, Pedestrian.class);
+    }
 
     /**
      * An accessor that can be used to get this Vehicle's speed. Used, for example, when a vehicle wants to see

@@ -10,7 +10,7 @@ public class TrafficLights extends Actor
     private boolean crossing;
     public TrafficLights (){
         crossing = false;
-        traffic = green;
+        traffic = red;
         traffic.scale(50,100);
         setRotation(-90);
         setImage(traffic);
@@ -27,5 +27,17 @@ public class TrafficLights extends Actor
             setRotation(-90);
             setImage(traffic);
         }    
+    }
+    public String getColour(){
+        if(getImage().equals(red)){
+            return "red";
+        }
+        else if(getImage().equals(yellow)){
+            return "yellow";
+        }
+        else if(getImage().equals(green)){
+            return "green";
+        }
+        return "no light";
     }
 }

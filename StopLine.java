@@ -1,11 +1,13 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
-public class Sensor extends Actor
+public class StopLine extends Actor
 {   
     private TrafficLights trafficLight;
-    public Sensor (TrafficLights traffic){
-        trafficLight = traffic;
-        
+    
+    public StopLine (){
+        GreenfootImage image = getImage();
+        image.scale(210,10);
+        setRotation(90);
     }
     public void act()
     {
