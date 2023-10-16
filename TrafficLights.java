@@ -10,7 +10,7 @@ public class TrafficLights extends Actor
     private boolean crossing;
     public TrafficLights (){
         crossing = false;
-        traffic = red;
+        traffic = green;
         traffic.scale(50,100);
         setRotation(-90);
         setImage(traffic);
@@ -19,6 +19,9 @@ public class TrafficLights extends Actor
         if(!crossing && Greenfoot.isKeyDown("m")){
             changeLight(red);
         }
+        if(!crossing && Greenfoot.isKeyDown("e")){
+            changeLight(green);
+        }   
     }
     public void changeLight(GreenfootImage colour){
         if(colour.equals("red") || colour.equals("yellow") || colour.equals("green")){

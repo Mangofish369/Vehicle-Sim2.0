@@ -168,9 +168,9 @@ public abstract class Vehicle extends SuperSmoothMover
         // You can ADD ELSE IF options to allow other 
         // factors to reduce driving speed.
 
-        if (otherVehicleSpeed > 0 && otherVehicleSpeed < maxSpeed){ // Vehicle ahead is slower?
+        if (otherVehicleSpeed >= 0 && otherVehicleSpeed < maxSpeed){ // Vehicle ahead is slower?
             speed = otherVehicleSpeed;
-        } else {
+        } else if (moving){
             speed = maxSpeed; // nothing impeding speed, so go max speed
         }
 
@@ -181,14 +181,11 @@ public abstract class Vehicle extends SuperSmoothMover
         if (isTouching(StopLine.class)){
             if(!getObjectsInRange(500,TrafficLights.class).isEmpty()){
                 TrafficLights lights = (TrafficLights)getObjectsInRange(300,TrafficLights.class).get(0);
-                System.out.println("here");
                 if(lights.getColour().equals("red")){
                     moving = false;
-                    
                 }
             }
         }
-        Pedestrian p = (Pedestrian)getOneObjectAtOffset((int)speed + getImage().getWidth()/2, 0, Pedestrian.class);
     }
 
     /**

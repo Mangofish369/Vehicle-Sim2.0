@@ -7,7 +7,6 @@ public class Bus extends Vehicle
 {
     public static final int STOP_DURATION = 1000;
     SimpleTimer stop = new SimpleTimer();
-    private boolean moving = true;
     public Bus(VehicleSpawner origin){
         super (origin); // call the superclass' constructor first
         
