@@ -1,5 +1,6 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This is the superclass for Vehicles.
@@ -16,6 +17,7 @@ public abstract class Vehicle extends SuperSmoothMover
     protected VehicleSpawner origin;
     protected int followingDistance;
     protected int myLaneNumber;
+ 
 
     protected abstract boolean checkHitPedestrian ();
 
@@ -63,7 +65,9 @@ public abstract class Vehicle extends SuperSmoothMover
      * - subclass' act() method can invoke super.act() to call this, as is demonstrated here.
      */
     public void act () {
+        
         drive(); 
+        
         if (!checkHitPedestrian()){
             repelPedestrians();
         }
@@ -151,6 +155,10 @@ public abstract class Vehicle extends SuperSmoothMover
         // we can call that on any vehicle to find out it's speed
         Vehicle ahead = (Vehicle) getOneObjectAtOffset (direction * (int)(speed + getImage().getWidth()/2 + 6), 0, Vehicle.class);
         double otherVehicleSpeed = -1;
+        checkTrafficLight();
+        if(!moving){
+            speed = 0;
+        }
         if (ahead != null) {
 
             otherVehicleSpeed = ahead.getSpeed();
@@ -160,14 +168,32 @@ public abstract class Vehicle extends SuperSmoothMover
         // You can ADD ELSE IF options to allow other 
         // factors to reduce driving speed.
 
-        if (otherVehicleSpeed > 0 && otherVehicleSpeed < maxSpeed){ // Vehicle ahead is slower?
+        if (otherVehicleSpeed >= 0 && otherVehicleSpeed < maxSpeed){ // Vehicle ahead is slower?
             speed = otherVehicleSpeed;
-        } else {
+        } else if (moving){
             speed = maxSpeed; // nothing impeding speed, so go max speed
         }
 
         move (speed * direction);
-    }   
+    }
+    
+    public void checkTrafficLight(){
+        StopLine s = (StopLine)getOneObjectAtOffset((int)direction*((int)speed + getImage().getWidth()/2), 0, StopLine.class);
+        if (s != null){
+            if(!getObjectsInRange(500,TrafficLights.class).isEmpty()){
+                TrafficLights lights = (TrafficLights)getObjectsInRange(300,TrafficLights.class).get(0);
+                if(lights.getColour().equals("red")){
+                    moving = false;
+                } else {
+                    moving = true;
+                }
+            }
+        } else{
+            moving = true;
+        }
+        
+        
+    }
 
     /**
      * An accessor that can be used to get this Vehicle's speed. Used, for example, when a vehicle wants to see

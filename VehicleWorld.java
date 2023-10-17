@@ -20,10 +20,17 @@ import java.util.LinkedList;
  * --> Implemented Z-sort, disabled paint order between Pedestrians and Vehicles (looks much better now)
  * --> Implemented lane-based speed modifiers for max speed
  * 
+ * 
+ * Commands
+ * w --> switch red light
+ * e --> switch to green light
+ * 
+ * n --> print coordinates of mouse location
  */
 public class VehicleWorld extends World
 {
     private GreenfootImage background;
+    private GreenfootImage crossingPlatform;
 
     // Color Constants
     public static Color GREY_BORDER = new Color (108, 108, 108);
@@ -48,7 +55,18 @@ public class VehicleWorld extends World
     private int timer = 0;
     SimpleTimer policeDelay = new SimpleTimer();
     Queue<Integer> speedingLane = new LinkedList<>();
-
+    
+    //Mouse pointer
+    Pointer pointer = new Pointer();
+    
+    // Traffic Lights and Stoplines
+    TrafficLights bottom = new TrafficLights();
+    TrafficLights top = new TrafficLights();
+    
+    StopLine leftToRight = new StopLine();
+    StopLine rightToLeft = new StopLine();
+    
+    
     /**
      * Constructor for objects of class MyWorld.
      * 
@@ -72,8 +90,14 @@ public class VehicleWorld extends World
 
         // set up background -- If you change this, make 100% sure
         // that your chosen image is the same size as the World
-        background = new GreenfootImage ("background01.png");
+        background = new GreenfootImage ("grass-background.png");
+        background.scale(1024, 800);
         setBackground (background);
+        
+        crossingPlatform = new GreenfootImage("crossing-road.png");
+        
+        
+        
 
         // Set critical variables - will affect lane drawing
         laneCount = 8;
@@ -92,12 +116,31 @@ public class VehicleWorld extends World
         laneSpawners[3].setSpeedModifier(1.4);
 
         setBackground (background);
+        
+        addObject(new CrossingPlatform(150,200),500,330);
+        addObject(new CrossingPlatform(150,200),500,500);
+        addObject(new CrossingPlatform(150,200),500,570);
+        
+        addObject(bottom,650,200);
+        addObject(top,350,700);
+        
+        addObject(pointer, -10,-10);
+        
+        addObject(leftToRight, 400,560);
+        addObject(rightToLeft, 600,340);
     }
 
     public void act () {
+        if(Greenfoot.isKeyDown("w")){
+            bottom.changeLight("red");
+        }
+        if(Greenfoot.isKeyDown("e")){
+            bottom.changeLight("green");
+        } 
         if(crime){
             timer++;
         }
+        pointer.checkKey();
         spawn();
         zSort ((ArrayList<Actor>)(getObjects(Actor.class)), this);
     }
@@ -115,7 +158,6 @@ public class VehicleWorld extends World
                     if(speed > 4){
                         crime = true;
                         speedingLane.offer(lane);
-                        System.out.println("Queue: "+speedingLane);
                     }
                 } else if (vehicleType == 1){
                     addObject(new Bus(laneSpawners[lane]), 0, 0);
@@ -124,7 +166,6 @@ public class VehicleWorld extends World
                 } 
                 if (crime == true){
                     if(timer >= DELAY_SPAWN_DURATION){
-                        //System.out.println(speedingLane.isEmpty());
                         while(!speedingLane.isEmpty()){
                             int chase = speedingLane.poll();
                             addObject(new Police(laneSpawners[chase]), -1000,0);
@@ -138,7 +179,7 @@ public class VehicleWorld extends World
 
         // Chance to spawn a Pedestrian
         if (Greenfoot.getRandomNumber (60) == 0){
-            int xSpawnLocation = Greenfoot.getRandomNumber (600) + 100; // random between 99 and 699, so not near edges
+            int xSpawnLocation = Greenfoot.getRandomNumber (150) + 430; // random between 99 and 699, so not near edges
             boolean spawnAtTop = Greenfoot.getRandomNumber(2) == 0 ? true : false;
             int pedestrianType = Greenfoot.getRandomNumber(2);
             if (spawnAtTop){
@@ -292,7 +333,9 @@ public class VehicleWorld extends World
         ArrayList<ActorContent> acList = new ArrayList<ActorContent>();
         // Create a list of ActorContent objects and populate it with all Actors sent to be sorted
         for (Actor a : actorsToSort){
-            acList.add (new ActorContent (a, a.getX(), a.getY()));
+            if(!(a instanceof CrossingPlatform || a instanceof StopLine)){
+                acList.add (new ActorContent (a, a.getX(), a.getY()));
+            }
         }    
         // Sort the Actor, using the ActorContent comparitor (compares by y coordinate)
         Collections.sort(acList);
