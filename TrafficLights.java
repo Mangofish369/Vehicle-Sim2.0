@@ -7,29 +7,33 @@ public class TrafficLights extends Actor
     private GreenfootImage yellow = new GreenfootImage("yellowLight.png");
     private GreenfootImage green = new GreenfootImage("greenLight.png");
     private GreenfootImage traffic; 
-    private boolean crossing;
     public TrafficLights (){
-        crossing = false;
         traffic = green;
         traffic.scale(50,100);
         setRotation(-90);
         setImage(traffic);
     }
     public void act(){
-        if(!crossing && Greenfoot.isKeyDown("m")){
-            changeLight(red);
+        if(Greenfoot.isKeyDown("w")){
+            changeLight("red");
         }
-        if(!crossing && Greenfoot.isKeyDown("e")){
-            changeLight(green);
+        if(Greenfoot.isKeyDown("e")){
+            changeLight("green");
         }   
     }
-    public void changeLight(GreenfootImage colour){
-        if(colour.equals("red") || colour.equals("yellow") || colour.equals("green")){
+    public void changeLight(String colour){
+        if(colour.equals("red")){
             traffic = red;
-            traffic.scale(50,100);
-            setRotation(-90);
-            setImage(traffic);
-        }    
+        }
+        else if (colour.equals("yellow")){
+            traffic = yellow;
+        }
+        else if (colour.equals("green")){
+            traffic  = green;
+        }
+        traffic.scale(50,100);
+        setRotation(-90);
+        setImage(traffic);
     }
     public String getColour(){
         if(getImage().equals(red)){

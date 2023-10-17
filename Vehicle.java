@@ -178,14 +178,21 @@ public abstract class Vehicle extends SuperSmoothMover
     }
     
     public void checkTrafficLight(){
-        if (isTouching(StopLine.class)){
+        StopLine s = (StopLine)getOneObjectAtOffset((int)direction*((int)speed + getImage().getWidth()/2), 0, StopLine.class);
+        if (s != null){
             if(!getObjectsInRange(500,TrafficLights.class).isEmpty()){
                 TrafficLights lights = (TrafficLights)getObjectsInRange(300,TrafficLights.class).get(0);
                 if(lights.getColour().equals("red")){
                     moving = false;
+                } else {
+                    moving = true;
                 }
             }
+        } else{
+            moving = true;
         }
+        
+        
     }
 
     /**

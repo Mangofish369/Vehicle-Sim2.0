@@ -20,6 +20,12 @@ import java.util.LinkedList;
  * --> Implemented Z-sort, disabled paint order between Pedestrians and Vehicles (looks much better now)
  * --> Implemented lane-based speed modifiers for max speed
  * 
+ * 
+ * Commands
+ * w --> switch red light
+ * e --> switch to green light
+ * 
+ * n --> print coordinates of mouse location
  */
 public class VehicleWorld extends World
 {
@@ -49,9 +55,17 @@ public class VehicleWorld extends World
     private int timer = 0;
     SimpleTimer policeDelay = new SimpleTimer();
     Queue<Integer> speedingLane = new LinkedList<>();
+    
+    //Mouse pointer
     Pointer pointer = new Pointer();
+    
+    // Traffic Lights and Stoplines
+    TrafficLights bottom = new TrafficLights();
+    TrafficLights top = new TrafficLights();
+    
     StopLine leftToRight = new StopLine();
     StopLine rightToLeft = new StopLine();
+    
     
     /**
      * Constructor for objects of class MyWorld.
@@ -107,8 +121,8 @@ public class VehicleWorld extends World
         addObject(new CrossingPlatform(150,200),500,500);
         addObject(new CrossingPlatform(150,200),500,570);
         
-        addObject(new TrafficLights(),650,200);
-        addObject(new TrafficLights(),350,700);
+        addObject(bottom,650,200);
+        addObject(top,350,700);
         
         addObject(pointer, -10,-10);
         
@@ -117,6 +131,12 @@ public class VehicleWorld extends World
     }
 
     public void act () {
+        if(Greenfoot.isKeyDown("w")){
+            bottom.changeLight("red");
+        }
+        if(Greenfoot.isKeyDown("e")){
+            bottom.changeLight("green");
+        } 
         if(crime){
             timer++;
         }
