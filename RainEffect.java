@@ -19,7 +19,7 @@ public class RainEffect extends Effect
     
     public void addedToWorld (World w){
         if(image == null){
-            image = drawSand(getWorld().getWidth() * 2, getWorld().getHeight(), 1000);
+            image = drawSand(getWorld().getWidth() * 2, getWorld().getHeight(), 3000);
         }
         setImage(image);
     }
@@ -53,10 +53,13 @@ public class RainEffect extends Effect
 
         ArrayList<Vehicle> vehicle = (ArrayList<Vehicle>)getWorld().getObjects(Vehicle.class);
         for (Vehicle v : vehicle){
-            v.slowDown (speed);
+            v.slowDown ();
         }
 
         if (actsLeft == 0){
+            for (Vehicle v: vehicle){
+                v.setSpeed(v.getMaxSpeed());
+            }
             getWorld().removeObject(this);
         }
         // If acts left hits zero, I'm finished
@@ -101,7 +104,7 @@ public class RainEffect extends Effect
                     //randSize = 2;
                     temp.drawRect (randX, randY, 0, 0);
                 }else{
-                    randSize = Greenfoot.getRandomNumber (2) + 2;
+                    randSize = Greenfoot.getRandomNumber (5) + 2;
                     temp.fillOval (randX, randY, randSize, randSize);
                 }
                 // silly way to draw a dot..

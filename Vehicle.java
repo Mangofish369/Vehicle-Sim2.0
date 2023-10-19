@@ -195,9 +195,9 @@ public abstract class Vehicle extends SuperSmoothMover
         
     }
     
-    public void slowDown(double speed){
-        double percentageSlow = 0.3 * ((double)Greenfoot.getRandomNumber (100))/100;
-        speed = speed * (1-percentageSlow);
+    public void slowDown(){
+        speed = getSpeed();
+        speed = speed * 0.7;
     }
 
     /**
@@ -209,5 +209,12 @@ public abstract class Vehicle extends SuperSmoothMover
             return speed;
         }
         return 0;
+    }
+    public double getMaxSpeed(){
+        return maxSpeed;
+    }
+    
+    public void setSpeed(double speed){
+        this.speed = speed;
     }
 }
