@@ -194,6 +194,11 @@ public abstract class Vehicle extends SuperSmoothMover
         
         
     }
+    
+    public void slowDown(double speed){
+        double percentageSlow = 0.3 * ((double)Greenfoot.getRandomNumber (100))/100;
+        speed = speed * (1-percentageSlow);
+    }
 
     /**
      * An accessor that can be used to get this Vehicle's speed. Used, for example, when a vehicle wants to see
