@@ -51,14 +51,14 @@ public class RainEffect extends Effect
         
         setLocation (getX() + speed, getY());
 
-        ArrayList<Vehicle> vehicle = (ArrayList<Vehicle>)getWorld().getObjects(Vehicle.class);
-        for (Vehicle v : vehicle){
-            v.slowDown ();
+        ArrayList<Vehicle> vehicles = (ArrayList<Vehicle>)getWorld().getObjects(Vehicle.class);
+        for (Vehicle v : vehicles){
+            v.setIsRaining(true);
         }
 
         if (actsLeft == 0){
-            for (Vehicle v: vehicle){
-                v.setSpeed(v.getMaxSpeed());
+            for (Vehicle v: vehicles){
+                v.setIsRaining(false);
             }
             getWorld().removeObject(this);
         }
