@@ -17,6 +17,7 @@ public abstract class Vehicle extends SuperSmoothMover
     protected VehicleSpawner origin;
     protected int followingDistance;
     protected int myLaneNumber;
+    protected boolean isRaining;
  
 
     protected abstract boolean checkHitPedestrian ();
@@ -43,6 +44,7 @@ public abstract class Vehicle extends SuperSmoothMover
         maxSpeed *= origin.getSpeedModifier();
         speed = maxSpeed;
         isNew = true;
+        isRaining = false;
     }
 
     /**
@@ -159,24 +161,38 @@ public abstract class Vehicle extends SuperSmoothMover
         if(!moving){
             speed = 0;
         }
-        if (ahead != null) {
-
-            otherVehicleSpeed = ahead.getSpeed();
+        else {
+            if(isRaining){
+                speed = speed * 0.5;
+            } else if (isRaining == false){
+                speed = maxSpeed;
+            }
+            if (ahead != null) {
+                otherVehicleSpeed = ahead.getSpeed();
+            }
+    
+            // Various things that may slow down driving speed 
+            // You can ADD ELSE IF options to allow other 
+            // factors to reduce driving speed.
+    
+            if (otherVehicleSpeed >= 0 && otherVehicleSpeed < maxSpeed){ // Vehicle ahead is slower?
+                speed = otherVehicleSpeed;
+            } else if (moving){
+                speed = maxSpeed; // nothing impeding speed, so go max speed
+            }
         }
-
-        // Various things that may slow down driving speed 
-        // You can ADD ELSE IF options to allow other 
-        // factors to reduce driving speed.
-
-        if (otherVehicleSpeed >= 0 && otherVehicleSpeed < maxSpeed){ // Vehicle ahead is slower?
-            speed = otherVehicleSpeed;
-        } else if (moving){
-            speed = maxSpeed; // nothing impeding speed, so go max speed
-        }
-
         move (speed * direction);
     }
     
+    public void checkIsRaining(){
+        if(isRaining){
+            moving = false;
+        }else if (!isRaining){
+            System.out.println("here");
+            moving = true;
+        }
+    }
+        
     public void checkTrafficLight(){
         StopLine s = (StopLine)getOneObjectAtOffset((int)direction*((int)speed + getImage().getWidth()/2), 0, StopLine.class);
         if (s != null){
@@ -194,6 +210,11 @@ public abstract class Vehicle extends SuperSmoothMover
         
         
     }
+    
+    public void slowDown(){
+        speed = getSpeed();
+        speed = speed * 0.7;
+    }
 
     /**
      * An accessor that can be used to get this Vehicle's speed. Used, for example, when a vehicle wants to see
@@ -204,5 +225,16 @@ public abstract class Vehicle extends SuperSmoothMover
             return speed;
         }
         return 0;
+    }
+    public double getMaxSpeed(){
+        return maxSpeed;
+    }
+    
+    public void setSpeed(double speed){
+        this.speed = speed;
+    }
+    
+    public void setIsRaining(boolean isItRaining){
+        isRaining = isItRaining;
     }
 }

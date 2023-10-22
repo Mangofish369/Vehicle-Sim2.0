@@ -56,6 +56,10 @@ public class VehicleWorld extends World
     SimpleTimer policeDelay = new SimpleTimer();
     Queue<Integer> speedingLane = new LinkedList<>();
     
+    //Rain Timer
+    private int actCount;
+    private int nextRainEffectAct;
+    
     //Mouse pointer
     Pointer pointer = new Pointer();
     
@@ -65,6 +69,7 @@ public class VehicleWorld extends World
     
     StopLine leftToRight = new StopLine();
     StopLine rightToLeft = new StopLine();
+    
     
     
     /**
@@ -80,14 +85,17 @@ public class VehicleWorld extends World
     {    
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
         super(1024, 800, 1, false); 
-
+        
+        actCount = 0;
         // This command (from Greenfoot World API) sets the order in which 
         // objects will be displayed. In this example, Pedestrians will
         // always be on top of everything else, then Vehicles (of all
         // sub class types) and after that, all other classes not listed
         // will be displayed in random order. 
         //setPaintOrder (Pedestrian.class, Vehicle.class); // Commented out to use Z-sort instead
-
+        
+        nextRainEffectAct = 300;
+        
         // set up background -- If you change this, make 100% sure
         // that your chosen image is the same size as the World
         background = new GreenfootImage ("grass-background.png");
@@ -131,6 +139,7 @@ public class VehicleWorld extends World
     }
 
     public void act () {
+        actCount++;
         if(Greenfoot.isKeyDown("w")){
             bottom.changeLight("red");
         }
@@ -197,7 +206,15 @@ public class VehicleWorld extends World
             }
         }
 
+        if(actCount == nextRainEffectAct){
+            addObject(new RainEffect(), 0, getHeight()/2); // Spawn rain
+            
+            int actsUntilNextStorm = Greenfoot.getRandomNumber (300) + 600; // Random delay for next spawn + minimum 10 seconds
+            
+            nextRainEffectAct = actCount + actsUntilNextStorm; // Next spawn interval determined 
+        }
     }
+    
 
     /**
      *  Given a lane number (zero-indexed), return the y position
