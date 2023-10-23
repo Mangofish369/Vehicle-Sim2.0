@@ -176,7 +176,20 @@ public abstract class Vehicle extends SuperSmoothMover
             // factors to reduce driving speed.
     
             if (otherVehicleSpeed >= 0 && otherVehicleSpeed < maxSpeed){ // Vehicle ahead is slower?
-                speed = otherVehicleSpeed;
+                if(otherVehicleSpeed == 0){
+                    speed = 0;
+                }
+                else if(checkLaneChange(direction,myLaneNumber).equals("Below")){
+                    setLocation(getX(),getY()+48);
+                    myLaneNumber++;
+                }
+                else if(checkLaneChange(direction,myLaneNumber).equals("Above")){
+                    setLocation(getX(),getY()-48);
+                    myLaneNumber--;
+                }
+                else{
+                    speed = otherVehicleSpeed;
+                }
             } else if (moving){
                 speed = maxSpeed; // nothing impeding speed, so go max speed
             }
@@ -207,8 +220,78 @@ public abstract class Vehicle extends SuperSmoothMover
         } else{
             moving = true;
         }
-        
-        
+    }
+    
+    public String checkLaneChange(int theDirection, int laneNum){
+        if(theDirection == -1){
+            if(laneNum == 0){
+                if(isLaneBelowOpen()){
+                    return "Below";
+                }
+                return "No";
+            }
+            else if(laneNum == 3){
+                if(isLaneAboveOpen()){
+                    return "Above";
+                }
+                return "No";
+            }
+            else{
+                if(isLaneAboveOpen()){
+                    return "Above";
+                }
+                else if(isLaneBelowOpen()){
+                    return "Below";
+                }
+                return "No";
+            }
+        }
+        else if(theDirection == 1){
+            if(laneNum == 5){
+                if(isLaneBelowOpen()){
+                    return "Below";
+                }
+                return "No";
+            }
+            else if(laneNum == 7){
+                if(isLaneAboveOpen()){
+                    return "Above";
+                }
+                return "No";
+            }
+            else{
+                if(isLaneBelowOpen()){
+                    return "Below";
+                }
+                else if(isLaneAboveOpen()){
+                    return "Above";
+                }
+                return "No";
+            }
+        }
+        return "No";
+    }
+    
+    public boolean isLaneAboveOpen(){
+        HitBox hitbox = new HitBox(0,0,getImage().getWidth(),getImage().getHeight());
+        getWorld().addObject(hitbox,getX(),getY()-48);
+        if(!hitbox.checkHitVehicle() && !hitbox.checkHitPedestrian()){
+            getWorld().removeObject(hitbox);
+            return true;
+        }
+        getWorld().removeObject(hitbox);
+        return false;
+    }
+    
+    public boolean isLaneBelowOpen(){
+        HitBox hitbox = new HitBox(0,0,getImage().getWidth(),getImage().getHeight());
+        getWorld().addObject(hitbox,getX(),getY()+48);
+        if(!hitbox.checkHitVehicle() && !hitbox.checkHitPedestrian()){
+            getWorld().removeObject(hitbox);
+            return true;
+        }
+        getWorld().removeObject(hitbox);
+        return false;
     }
     
     public void slowDown(){
@@ -237,4 +320,5 @@ public abstract class Vehicle extends SuperSmoothMover
     public void setIsRaining(boolean isItRaining){
         isRaining = isItRaining;
     }
+    
 }

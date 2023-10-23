@@ -39,7 +39,7 @@ public abstract class Pedestrian extends SuperSmoothMover
 
         }
     }
-
+    
     /**
      * Method to cause this Pedestrian to become knocked down - stop moving, turn onto side
      */
