@@ -174,7 +174,8 @@ public abstract class Vehicle extends SuperSmoothMover
             // Various things that may slow down driving speed 
             // You can ADD ELSE IF options to allow other 
             // factors to reduce driving speed.
-    
+            
+            //Lane Change needs a cooldown
             if (otherVehicleSpeed >= 0 && otherVehicleSpeed < maxSpeed){ // Vehicle ahead is slower?
                 if(otherVehicleSpeed == 0){
                     speed = 0;
